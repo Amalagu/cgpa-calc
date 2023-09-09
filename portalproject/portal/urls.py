@@ -10,4 +10,4 @@ router.register(r'courses', CourseViewSet)
 
 
 
-urlpatterns = [path('', include(router.urls)),  path('', home, name='home' ), path('api/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='api' ),]
+urlpatterns = [path('', include(router.urls)),  path('home/', home, name='home' ), path('api/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='api' ),]

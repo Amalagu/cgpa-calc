@@ -7,18 +7,39 @@
 <body>
     <h1> Home Page</h1>
     <div>
-        <!-- {% for year in years %}
-            {% for course in year.course_set.all %}
-                <p>
-                {{course.code}}
-                {{course.grade}}
-                
-                </p>
-            {% endfor %}
-        {% endfor %}
-        
-        <hr> -->
         {{cgpa}}
     </div>
+
+    <hr>
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <table border="1">
+            <tr>
+                <th> Course Code </th>
+                <th> Course Title</th>
+                <th> Course Unit </th>
+                <th> Grade  </th>
+            </tr>
+            {% for course in courses %}
+            <tr>
+                <td> {{course.code}} </td>
+                <td> {{course.title}} </td>
+                <td> {{course.unit}} </td>
+                <td> 
+                    <select name="{{course.code}}">
+                        <option value="">Select an Grade</option>
+                        <option value="5">A</option>
+                        <option value="4">B</option>
+                        <option value="3">C</option>
+                        <option value="2">D</option>
+                        <option value="1">E</option>
+                        <option value="0">F</option>
+                    </select>
+                </td>         
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

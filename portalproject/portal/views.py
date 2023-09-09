@@ -25,33 +25,44 @@ class CourseViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 created_courses.append(serializer.data)
+            else:
+                print(f"Validation errors: {serializer.errors}")
 
         return Response(created_courses, status=status.HTTP_201_CREATED)
 
-
-
-
-
-
-def cgpa_calc(user):
-	tgp = 0
-	tnu =0
-	cgpa = 0.0
-	student_course_list = Enrollment.objects.filter(student=user.student)
-	for course in student_course_list:
-		tgp+= course.grade*course.course.unit
-		tnu += course.course.unit
-	if tnu:
-		cgpa = tgp/tnu
-	return cgpa
 	
 
 def home(request):
 	user=request.user
-	#print(user.student)
-	cgpa = cgpa_calc(user)
-	context ={'cgpa':cgpa}
+	courses = Course.objects.all()
+	enrolled_objects = Enrollment.objects.filter(student=user.student)
+	course_list = [course.code for course in courses ]
+	enrolled_courses =[course.course.code for course in enrolled_objects ] #retrieves a list of courses that the current user is enrolled for
+	cgpa = 0.0
+
+	#getting the student's new enrollment selection
+	if request.method == 'POST':
+		print(request.POST)
+		entry_list=[]
+		tnu = 0
+		tgp = 0
+		for entry in request.POST:
+			if entry in course_list and request.POST[entry] != '':
+				entry_list.append(entry)
+				entry_course =  Course.objects.get(code=entry)
+				tnu += entry_course.unit
+				tgp += entry_course.unit * int(request.POST[entry])
+		if tnu:
+			cgpa = tgp/tnu
+
+	context ={
+		'cgpa':cgpa, 
+		'courses':courses, 
+		'enrolled_courses': enrolled_courses
+	}
 	return render(request, 'home.html', context)
+
 	
 	
-	
+""" def enroll(request):
+      return render(request, 'enrollment') """

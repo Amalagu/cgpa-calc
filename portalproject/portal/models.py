@@ -3,7 +3,14 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Year(models.Model):
-	levels= [('Year One', 'YR1'), ('Year Two', 'YR2')]
+	levels = [
+    ('Year One', 'YR1'),
+    ('Year Two', 'YR2'),
+    ('Year Three', 'YR3'),
+    ('Year Four', 'YR4'),
+    ('Year Five', 'YR5')
+]
+
 	name = models.CharField(max_length=10, choices=levels)
 	
 	@property
