@@ -3,11 +3,16 @@
 # urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CourseViewSet, home
+from .views import CourseViewSet, home, calc
 
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet)
 
 
 
-urlpatterns = [path('', include(router.urls)),  path('home/', home, name='home' ), path('api/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='api' ),]
+urlpatterns = [
+    path('', include(router.urls)),  
+    path('home/', home, name='home' ),  
+    path('home/calc/<str:level>', calc, name='calc' ), 
+    path('api/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='api' ),
+    ]

@@ -1,45 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Page title</title>
-</head>
-<body>
-    <h1> Home Page</h1>
-    <div>
-        {{cgpa}}
-    </div>
+  </head>
+  <body>
+    <h1>Home Page</h1>
+    <div>{{cgpa}}</div>
 
-    <hr>
+    <hr />
     <form method="post" action="{% url 'home' %}">
-        {% csrf_token %}
-        <table border="1">
-            <tr>
-                <th> Course Code </th>
-                <th> Course Title</th>
-                <th> Course Unit </th>
-                <th> Grade  </th>
-            </tr>
-            {% for course in courses %}
-            <tr>
-                <td> {{course.code}} </td>
-                <td> {{course.title}} </td>
-                <td> {{course.unit}} </td>
-                <td> 
-                    <select name="{{course.code}}">
-                        <option value="">Select an Grade</option>
-                        <option value="5">A</option>
-                        <option value="4">B</option>
-                        <option value="3">C</option>
-                        <option value="2">D</option>
-                        <option value="1">E</option>
-                        <option value="0">F</option>
-                    </select>
-                </td>         
-            </tr>
-            {% endfor %}
-        </table>
-        <input type="submit" value="Submit">
+      {% csrf_token %}
+      <table border="1">
+        <tr>
+          <th>Choose Year</th>
+        </tr>
+        <tr>
+          <td>
+            <select name="level">
+              <option value="">Select a Year</option>
+              <option value="Year One">100 Level</option>
+              <option value="Year Two">200 Level</option>
+              <option value="Year Three">300 Level</option>
+              <option value="Year Four">400 Level</option>
+              <option value="Year Five">500 Level</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <!-- <table border="1">
+        <tr>
+          <th>Course Code</th>
+          <th>Course Title</th>
+          <th>Course Unit</th>
+          <th>Grade</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+          <td>{{course.code}}</td>
+          <td>{{course.title}}</td>
+          <td>{{course.unit}}</td>
+          <td>
+            <select name="{{course.code}}">
+              <option value="">Select an Grade</option>
+              <option value="5">A</option>
+              <option value="4">B</option>
+              <option value="3">C</option>
+              <option value="2">D</option>
+              <option value="1">E</option>
+              <option value="0">F</option>
+            </select>
+          </td>
+        </tr>
+        {% endfor %}
+      </table> -->
+      <input type="submit" value="Submit" />
     </form>
-</body>
+  </body>
 </html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Page title</title>
+  </head>
+  <body>
+    <h1>Home Page</h1>
+    <div>{{level_name}} GPA: {{gpa}}</div>
+    <div>Cummulative GPA: {{cgpa}}</div>
+
+    <hr />
+    <form method="POST" action="{% url 'calc' level %}">
+      {% csrf_token %}
+      <table border="1">
+        <tr>
+          <th>Course Code</th>
+          <th>Course Title</th>
+          <th>Course Unit</th>
+          <th>Grade</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+          <td>{{course.code}}</td>
+          <td>{{course.title}}</td>
+          <td>{{course.unit}}</td>
+          <td>
+            <select name="{{course.code}}">
+              <option value="">Select an Grade</option>
+              <option value="5">A</option>
+              <option value="4">B</option>
+              <option value="3">C</option>
+              <option value="2">D</option>
+              <option value="1">E</option>
+              <option value="0">F</option>
+            </select>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <input type="submit" value="Submit" />
+    </form>
+    <!--  <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <table border="1">
+            <tr>
+                <th> Course Code </th>
+                <th> Course Title</th>
+                <th> Course Unit </th>
+                <th> Grade  </th>
+            </tr>
+            {% for course in courses %}
+            <tr>
+                <td> {{course.code}} </td>
+                <td> {{course.title}} </td>
+                <td> {{course.unit}} </td>
+                <td> 
+                    <select name="{{course.code}}">
+                        <option value="">Select an Grade</option>
+                        <option value="5">A</option>
+                        <option value="4">B</option>
+                        <option value="3">C</option>
+                        <option value="2">D</option>
+                        <option value="1">E</option>
+                        <option value="0">F</option>
+                    </select>
+                </td>         
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Submit">
+    </form> -->
+  </body>
+</html>
