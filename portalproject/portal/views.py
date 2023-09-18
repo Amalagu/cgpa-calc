@@ -46,29 +46,36 @@ class CourseViewSet(viewsets.ModelViewSet):
 def enrollment_view(request, level):
     year = Year.objects.get(id=level)
     student = Student.objects.get(user=request.user)
-    courses = Course.objects.filter(level=level)
+    allcourses = Course.objects.filter(level=level)
     enrollments_objects = Enrollment.objects.filter(
-        student=student, course__level=year)
+        student=student, course__level=year)  # retrieve all the enrollments done by the student in that level
     enrolled_courses = [
-        enrolled.course for enrolled in enrollments_objects]
+        enrolled.course for enrolled in enrollments_objects]  # queryset of all the course objects the student enrolled for in that level
     context = {
         'enrolled_courses': enrolled_courses,
-        'courses': courses,
+        'courses': allcourses,
         'enrollments_objects': enrollments_objects,
-        'level': year.id
+        'level': year.id,
+        'year': year.name
 
     }
     if request.method == 'POST':
-        # this matches the course codes
-        coursescode = [course.code for course in courses]
+        # this retrieves the course codes only for all the courses offered
+        allcoursescode = [course.code for course in allcourses]
         enrolled_coursescode = [course.code for course in enrolled_courses]
-        for code in request.POST.keys():
-            # if (code not in enrolled_coursescode) & (code in coursescode):
-            if code in coursescode:
-                course = Course.objects.get(code=code)
-                enroll = Enrollment.objects.create(
-                    student=student, course=course, grade=5)
-                enroll.save()
+        set_of_already_enrolled_courses = set(enrolled_coursescode)
+        set_of_enrollment_choices = set(
+            code for code in request.POST.keys() if code in allcoursescode)
+        print(set_of_enrollment_choices)
+        print(set_of_already_enrolled_courses)
+        for code in (set_of_enrollment_choices - set_of_already_enrolled_courses):
+            course = Course.objects.get(code=code)
+            enroll = Enrollment.objects.create(
+                student=student, course=course, grade=5)
+            enroll.save()
+        for code in (set_of_already_enrolled_courses - set_of_enrollment_choices):
+            enroll = Enrollment.objects.get(course__code=code, student=student)
+            enroll.delete()
 
         return redirect('enrollment_view', level=year.id)
     return render(request, 'enrollment.html', context)
@@ -79,20 +86,39 @@ def calc(request, level):
     student = Student.objects.get(user=user)
     level_id = level
     level_name = Year.objects.get(id=level)
-    courses = Course.objects.filter(level=level_id)
-    # enrolled_objects = Enrollment.objects.filter(student=user.student)
-    # course_list = [course.code for course in courses]
-    # retrieves a list of courses that the current user is enrolled for
-    # enrolled_courses = [course.course.code for course in enrolled_objects]
+    enrollments = Enrollment.objects.filter(
+        course__level=level_id, student=student)
+    courses = [enrolled.course for enrolled in enrollments]
+    all_enrolled_coursecode = []
+    coursestuples = []
+    for course in courses:
+        grade = course.enrollment.get(student=student).grade
+        coursestuples.append((course, grade))
+        all_enrolled_coursecode.append(course.code)
     gpa = student.result[f'{level_name}']['gp']
-
+    gradekeys = {
+        '0': 'F', '1': 'E', '2': 'D', '3': 'C', '4': 'B', '5': 'A'
+    }
+    context = {
+        'level': level,
+        'level_name': level_name,
+        'gpa': gpa,
+        'cgpa': student.cgpa,
+        'courses': courses,
+        'coursestuples': coursestuples
+    }
     # getting the student's new enrollment selection
     if request.method == 'POST':
+        print(request.POST)
         entry_list = []
         tnu = 0
         tgp = 0
         for entry in request.POST:
-            if entry in courses and request.POST[entry] != '':
+            if entry in all_enrolled_coursecode and request.POST[entry] != '':
+                enroll_new_grade = Enrollment.objects.get(
+                    course__code=entry, student=student)
+                enroll_new_grade.grade = gradekeys[request.POST[entry]]
+                enroll_new_grade.save()
                 entry_list.append(entry)
                 entry_course = Course.objects.get(code=entry)
                 tnu += entry_course.unit
@@ -104,14 +130,8 @@ def calc(request, level):
         student.result[f'{level_name}']['gp'] = gpa
         student.cgpa = studentcgpa(student)
         student.save()
+        return redirect('calc', level=level)
 
-    context = {
-        'level': level,
-        'level_name': level_name,
-        'gpa': gpa,
-        'cgpa': student.cgpa,
-        'courses': courses,
-    }
     return render(request, 'calc.html', context)
 
 
@@ -119,9 +139,12 @@ def home(request):
     user = request.user
     student_cgpa = studentcgpa(Student.objects.get(user=user))
     if request.method == 'POST':
-        level = request.POST['level']
-        level = Year.objects.get(name=level).id
-        courses = Course.objects.filter(level=level)
-        return redirect(calc, level)
+        if request.POST['level']:
+            level = request.POST['level']
+            level = Year.objects.get(name=level).id
+            if request.POST['choice'] == 'calculate':
+                return redirect('calc', level=level)
+            elif request.POST['choice'] == 'enroll':
+                return redirect('enrollment_view', level=level)
 
     return render(request, 'home.html', {'cgpa': student_cgpa})

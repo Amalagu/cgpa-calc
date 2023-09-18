@@ -2,18 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Page title</title>
+    <title>Home Page</title>
   </head>
   <body>
+    <header><a href=""></a></header>
     <h1>Home Page</h1>
-    <div>{{cgpa}}</div>
+    <div>Your CGPA is: {{cgpa}}</div>
 
     <hr />
     <form method="post" action="{% url 'home' %}">
       {% csrf_token %}
       <table border="1">
         <tr>
-          <th>Choose Year</th>
+          <th>Welcome</th>
+        </tr>
+        <tr>
+          <td>
+            <select name="choice">
+              <option value="">What Would You like To Do</option>
+              <option value="enroll">Enroll Courses</option>
+              <option value="calculate">Calculate CGPA</option>
+            </select>
+          </td>
         </tr>
         <tr>
           <td>

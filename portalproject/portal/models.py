@@ -57,10 +57,12 @@ class Student(models.Model):
 
 
 class Enrollment(models.Model):
-    gradelist = [(5, 'A'), (4, 'B'), (3, 'C'), (2, 'D'), (1, 'E'), (0, 'F')]
+    gradelist = [('A', 'A'), ('B', 'B'), ('C', 'C'),
+                 ('D', 'D'), ('E', 'E'), ('F', 'F')]
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    grade = models.IntegerField(choices=gradelist)
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="enrollment")
+    grade = models.CharField(max_length=1, choices=gradelist)
     # level = models.ForeignKey(Year, on_delete=models.CASCADE, default=1)
 
     def __str__(self):

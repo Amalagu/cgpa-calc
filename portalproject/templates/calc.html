@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Page title</title>
+    <title>CGPA Calculator</title>
   </head>
   <body>
-    <h1>Home Page</h1>
+    <h1>CGPA Calculator Page</h1>
     <div>{{level_name}} GPA: {{gpa}}</div>
     <div>Cummulative GPA: {{cgpa}}</div>
 
@@ -19,7 +19,7 @@
           <th>Course Unit</th>
           <th>Grade</th>
         </tr>
-        {% for course in courses %}
+        {% for course, grade in coursestuples %}
         <tr>
           <td>{{course.code}}</td>
           <td>{{course.title}}</td>
@@ -27,12 +27,12 @@
           <td>
             <select name="{{course.code}}">
               <option value="">Select an Grade</option>
-              <option value="5">A</option>
-              <option value="4">B</option>
-              <option value="3">C</option>
-              <option value="2">D</option>
-              <option value="1">E</option>
-              <option value="0">F</option>
+              <option value="5" {% if grade == 'A' %} selected {% endif %}>A</option>
+              <option value="4" {% if grade == 'B' %} selected {% endif %}>B</option>
+              <option value="3" {% if grade == 'C' %} selected {% endif %}>C</option>
+              <option value="2" {% if grade == 'D' %} selected {% endif %}>D</option>
+              <option value="1" {% if grade == 'E' %} selected {% endif %}>E</option>
+              <option value="0" {% if grade == 'F' %} selected {% endif %}>F</option>
             </select>
           </td>
         </tr>

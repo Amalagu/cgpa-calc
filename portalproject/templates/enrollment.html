@@ -2,9 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Page title</title>
+    <title>Course Enrollment</title>
   </head>
   <body>
+    <h1>Course Enrollment Form For {{year}}</h1>
     <hr />
     <form method="POST" action="{% url 'enrollment_view' level %}">
       {% csrf_token %}

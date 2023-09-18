@@ -12,8 +12,8 @@ router.register(r'courses', CourseViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('home/', home, name='home'),
-    path('home/calc/<str:level>', calc, name='calc'),
-    path('home/enrollment/<int:level>', enrollment_view, name='enrollment_view'),
+    path('calc/<str:level>', calc, name='calc'),
+    path('enrollment/<int:level>', enrollment_view, name='enrollment_view'),
     path(
         'api/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='api'),
 ]
