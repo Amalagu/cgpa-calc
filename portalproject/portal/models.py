@@ -49,7 +49,7 @@ class Student(models.Model):
         return newdict
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     registration_number = models.CharField(max_length=20)
-    result = models.JSONField(default=makedict())
+    result = models.JSONField(default=makedict)
     cgpa = models.FloatField(default=0.0)
 
     def __str__(self):
