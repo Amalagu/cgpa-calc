@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Student Portal</title>
+  </head>
+
+  <body>
+    <a href="{% url 'login' %}"> Login </a><br />
+    <a href="{% url 'logout' %}"> Logout </a><br />
+    <a href="{% url 'home' %}"> Home </a>
+    {% block content %} {% endblock%}
+  </body>
+</html>

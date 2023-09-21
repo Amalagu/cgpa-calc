@@ -1,45 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Home Page</title>
-  </head>
-  <body>
-    <header><a href=""></a></header>
-    <h1>Home Page</h1>
-    <div>Your CGPA is: {{cgpa}}</div>
+{% extends 'base.html' %}
 
-    <hr />
-    <form method="post" action="{% url 'home' %}">
-      {% csrf_token %}
-      <table border="1">
-        <tr>
-          <th>Welcome</th>
-        </tr>
-        <tr>
-          <td>
-            <select name="choice">
-              <option value="">What Would You like To Do</option>
-              <option value="enroll">Enroll Courses</option>
-              <option value="calculate">Calculate CGPA</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <select name="level">
-              <option value="">Select a Year</option>
-              <option value="Year One">100 Level</option>
-              <option value="Year Two">200 Level</option>
-              <option value="Year Three">300 Level</option>
-              <option value="Year Four">400 Level</option>
-              <option value="Year Five">500 Level</option>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <hr />
-      <!-- <table border="1">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home Page</title>
+</head>
+{% block content %}
+<header><a href=""></a></header>
+<h1>Home Page</h1>
+<div>Your CGPA is: {{cgpa}}</div>
+
+<hr />
+<form method="post" action="{% url 'home' %}">
+  {% csrf_token %}
+  <table border="1">
+    <tr>
+      <th>Welcome</th>
+    </tr>
+    <tr>
+      <td>
+        <select name="choice">
+          <option value="">What Would You like To Do</option>
+          <option value="enroll">Enroll Courses</option>
+          <option value="calculate">Calculate CGPA</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select name="level">
+          <option value="">Select a Year</option>
+          <option value="Year One">100 Level</option>
+          <option value="Year Two">200 Level</option>
+          <option value="Year Three">300 Level</option>
+          <option value="Year Four">400 Level</option>
+          <option value="Year Five">500 Level</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+  <hr />
+  <!-- <table border="1">
         <tr>
           <th>Course Code</th>
           <th>Course Title</th>
@@ -65,7 +65,6 @@
         </tr>
         {% endfor %}
       </table> -->
-      <input type="submit" value="Submit" />
-    </form>
-  </body>
-</html>
+  <input type="submit" value="Submit" />
+</form>
+{% endblock %}

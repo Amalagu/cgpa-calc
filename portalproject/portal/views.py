@@ -6,7 +6,56 @@ from django.views.generic import ListView
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+
+def loginUser(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            print('Username does not exist')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            print('Username not found')
+
+    return render(request, 'signup_login.html')
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
+
+def registerUser(request):
+    form = UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            return redirect('login')
+
+    context = {'page': 'register',
+               'form': form}
+    return render(request, 'signup_login.html', context)
 
 
 def studentcgpa(student):
@@ -43,6 +92,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Response(created_courses, status=status.HTTP_201_CREATED)
 
 
+@login_required
 def enrollment_view(request, level):
     year = Year.objects.get(id=level)
     student = Student.objects.get(user=request.user)
@@ -81,6 +131,7 @@ def enrollment_view(request, level):
     return render(request, 'enrollment.html', context)
 
 
+@login_required
 def calc(request, level):
     user = request.user
     student = Student.objects.get(user=user)
@@ -135,6 +186,7 @@ def calc(request, level):
     return render(request, 'calc.html', context)
 
 
+@login_required
 def home(request):
     user = request.user
     student_cgpa = studentcgpa(Student.objects.get(user=user))

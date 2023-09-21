@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CGPA Calculator</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block content %}
     <h1>CGPA Calculator Page</h1>
     <div>{{level_name}} GPA: {{gpa}}</div>
     <div>Cummulative GPA: {{cgpa}}</div>
@@ -70,5 +65,5 @@
         </table>
         <input type="submit" value="Submit">
     </form> -->
-  </body>
-</html>
+  
+{% endblock %}

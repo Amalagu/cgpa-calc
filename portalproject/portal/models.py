@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Year(models.Model):
@@ -67,6 +69,22 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student.user.username} - {self.course.code} )"
+
+
+@receiver(post_save, sender=User)
+def create_student_profile(sender, instance, created, **kwargs):
+    if created:
+        Student.objects.create(
+            user=instance, registration_number="YourDefaultValueHere")
+
+
+@receiver(post_save, sender=User)
+def save_student_profile(sender, instance, **kwargs):
+    instance.student.save()
+
+
+post_save.connect(create_student_profile, sender=User)
+post_save.connect(save_student_profile, sender=User)
 
 
 """ class CGPA(models.Model):

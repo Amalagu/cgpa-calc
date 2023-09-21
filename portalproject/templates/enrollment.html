@@ -1,48 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Course Enrollment</title>
-  </head>
-  <body>
-    <h1>Course Enrollment Form For {{year}}</h1>
-    <hr />
-    <form method="POST" action="{% url 'enrollment_view' level %}">
-      {% csrf_token %}
-      <table border="1">
-        <tr>
-          <th>Course Code</th>
-          <th>Course Title</th>
-          <th>Course Unit</th>
-        </tr>
-        {% for course in courses %}
-        <tr>
-          <td>{{course.code}}</td>
-          <td>{{course.title}}</td>
-          <td>{{course.unit}}</td>
-          {% if course in enrolled_courses %}
-          <td>
-            <input
-              type="checkbox"
-              id="{{course.code}}"
-              name="{{course.code}}"
-              checked
-            />
-          </td>
-          {% else %}
-          <td>
-            <input
-              type="checkbox"
-              id="{{course.code}}"
-              name="{{course.code}}"
-            />
-          </td>
-          {% endif %}
-        </tr>
-        {% endfor %}
-        <tr></tr>
-      </table>
-      <input type="submit" value="Submit" />
-    </form>
-  </body>
-</html>
+{% extends 'base.html' %} {% block content %}
+<h1>Course Enrollment Form For {{year}}</h1>
+<hr />
+<form method="POST" action="{% url 'enrollment_view' level %}">
+  {% csrf_token %}
+  <table border="1">
+    <tr>
+      <th>Course Code</th>
+      <th>Course Title</th>
+      <th>Course Unit</th>
+    </tr>
+    {% for course in courses %}
+    <tr>
+      <td>{{course.code}}</td>
+      <td>{{course.title}}</td>
+      <td>{{course.unit}}</td>
+      {% if course in enrolled_courses %}
+      <td>
+        <input
+          type="checkbox"
+          id="{{course.code}}"
+          name="{{course.code}}"
+          checked
+        />
+      </td>
+      {% else %}
+      <td>
+        <input type="checkbox" id="{{course.code}}" name="{{course.code}}" />
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+    <tr></tr>
+  </table>
+  <input type="submit" value="Submit" />
+</form>
+{% endblock %}
